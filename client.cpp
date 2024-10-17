@@ -12,12 +12,11 @@
 #include <cmath>
 
 struct simpleData {
-    char Message[20];
-    std::string Symbol;
-    std::string Frequency;
-    std::string ShannonCode;
-    std::string EncodedMessage;
-
+    char Message[100];
+    char Symbol[10];
+    int Frequency;
+    char ShannonCode[20];
+    char EncodedMessage[200];
 };
 
 struct Data {
@@ -239,16 +238,34 @@ int main(int argc, char *argv[])
 
     simpleData Data1;
     for( int i = 0; i < lines.size(); i++) {
-        //Data1.Message = lines[i].line;
+        //MESSAGE
         strncpy(Data1.Message, lines[i].line.c_str(), sizeof(Data1.Message)-1);
         Data1.Message[sizeof(Data1.Message) -1] = '\0';
 
-        n = write(sockfd, &Data1, sizeof(simpleData));
-        if (n < 0)
-        {
-        std::cerr << "ERROR writing to socket";
-        exit(1);
+        for( int j = 0; j < lines[i].orderedLetters.size(); j++) {
+            //SYMBOL
+            Data1.Symbol[0] = lines[i].orderedLetters[j];
+            Data1.Symbol[1] = '\0';
+
+            //FREQUENCY
+            Data1.Frequency = lines[i].orderedFrequency[j];
+
+            //SHANNON
+            strncpy(Data1.ShannonCode, lines[i].code[j].c_str(), sizeof(Data1.ShannonCode) - 1);
+            Data1.ShannonCode[sizeof(Data1.ShannonCode) - 1] = '\0';
+
+            // ENCODED
+            strncpy(Data1.EncodedMessage, lines[i].encoded.c_str(), sizeof(Data1.EncodedMessage) - 1);
+            Data1.EncodedMessage[sizeof(Data1.EncodedMessage) - 1] = '\0';
+
+            n = write(sockfd, &Data1, sizeof(simpleData));
+            if (n < 0) {
+                std::cerr << "ERROR writing to socket";
+                exit(1);
+            }
         }
+
+        
     }
 
     if(tid!=nullptr){

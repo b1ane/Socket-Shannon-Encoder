@@ -16,12 +16,11 @@
 #include <string>
 
 struct simpleData {
-    char Message[20];
-    std::string Symbol;
-    std::string Frequency;
-    std::string ShannonCode;
-    std::string EncodedMessage;
-
+    char Message[100];
+    char Symbol[10];
+    int Frequency;
+    char ShannonCode[20];
+    char EncodedMessage[200];
 };
 
 struct Data {
@@ -106,6 +105,13 @@ int main(int argc, char *argv[])
             while((n = read(newsockfd, &Data1, sizeof(simpleData))) > 0)
             {
                 std::cout << "Message: " << Data1.Message << std::endl;
+                std::cout << "Alphabet: " << std::endl;
+                std::cout << "Symbol : " << Data1.Symbol;
+                std::cout << ", Frequency: " << Data1.Frequency;
+                std::cout << ", Shannon code: " << Data1.ShannonCode << std::endl;
+                std::cout << std::endl;
+                std::cout << "Encoded message: " << Data1.EncodedMessage << std::endl;
+                std::cout << std::endl;
             }
             if (n < 0)
             {
