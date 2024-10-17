@@ -12,13 +12,32 @@
 #include <sys/wait.h>
 #include <csignal>
 
+#include <vector>
+#include <string>
 
-struct symbol
-{
-    char name;
-    int frequency;
-    double probability;
-    char code[10];
+struct simpleData {
+    char Message[20];
+    std::string Symbol;
+    std::string Frequency;
+    std::string ShannonCode;
+    std::string EncodedMessage;
+
+};
+
+struct Data {
+    std::vector<char> letters; //stores each letter in message
+    std::vector<int> frequency; //stores frequency of each letter in message
+    std::vector<int> shannon; //stores shannon code for each letter in message
+    std::string line; //message
+    std::string encoded;
+
+    std::vector<char> orderedLetters; //stores each letter in message, ordered by frequency 
+    std::vector<int> orderedFrequency; //stores frequency of each letter in message, ordered by frequency 
+    std::vector<float> probabilities;
+    std::vector<float> accumulation;
+    std::vector<float> length;
+
+    std::vector<std::string> code;
 };
 
 // Fireman function
@@ -82,17 +101,17 @@ int main(int argc, char *argv[])
                 std::cerr << "ERROR on accept";
                 exit(1);
             }
-            symbol s;
-            n = read(newsockfd, &s, sizeof(symbol));
+
+            simpleData Data1;
+            while((n = read(newsockfd, &Data1, sizeof(simpleData))) > 0)
+            {
+                std::cout << "Message: " << Data1.Message << std::endl;
+            }
             if (n < 0)
             {
                 std::cerr << "ERROR reading from socket";
                 exit(1);
             }
-            std::cout << "Name: " << s.name << std::endl;
-            std::cout << "Frequency: " << s.frequency << std::endl;
-            std::cout << "Probability: " << s.probability << std::endl;
-            std::cout << "Code: " << s.code << std::endl;
             
             //Close the newsocket descriptor
             close(newsockfd);
