@@ -102,16 +102,27 @@ int main(int argc, char *argv[])
             }
 
             simpleData Data1;
+            bool first = true; //determines when new message has started
             while((n = read(newsockfd, &Data1, sizeof(simpleData))) > 0)
             {
-                std::cout << "Message: " << Data1.Message << std::endl;
-                std::cout << "Alphabet: " << std::endl;
-                std::cout << "Symbol : " << Data1.Symbol;
-                std::cout << ", Frequency: " << Data1.Frequency;
-                std::cout << ", Shannon code: " << Data1.ShannonCode << std::endl;
-                std::cout << std::endl;
-                std::cout << "Encoded message: " << Data1.EncodedMessage << std::endl;
-                std::cout << std::endl;
+                if(Data1.Symbol[0] == '\0') {
+                    if (first) {
+                        std::cout << "Message: " << Data1.Message << std::endl;
+                        std::cout << "Alphabet: " << std::endl;
+                        first = false;
+                    }
+                    else {
+                        std::cout << "Encoded message: " << Data1.EncodedMessage << std::endl;
+                        std::cout << std::endl;
+                        first = true;
+                    }
+                }
+                else {
+                    std::cout << "Symbol : " << Data1.Symbol;
+                    std::cout << ", Frequency: " << Data1.Frequency;
+                    std::cout << ", Shannon code: " << Data1.ShannonCode << std::endl;
+                }
+                
             }
             if (n < 0)
             {

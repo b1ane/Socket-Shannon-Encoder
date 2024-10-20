@@ -242,6 +242,13 @@ int main(int argc, char *argv[])
         strncpy(Data1.Message, lines[i].line.c_str(), sizeof(Data1.Message)-1);
         Data1.Message[sizeof(Data1.Message) -1] = '\0';
 
+        Data1.Symbol[0] = '\0';
+        n = write(sockfd, &Data1, sizeof(simpleData));
+        if( n<0 ) {
+            std::cerr << "ERROR writing starting message to socket" << std::endl;
+            exit(1);
+        }
+
         for( int j = 0; j < lines[i].orderedLetters.size(); j++) {
             //SYMBOL
             Data1.Symbol[0] = lines[i].orderedLetters[j];
@@ -255,8 +262,6 @@ int main(int argc, char *argv[])
             Data1.ShannonCode[sizeof(Data1.ShannonCode) - 1] = '\0';
 
             // ENCODED
-            strncpy(Data1.EncodedMessage, lines[i].encoded.c_str(), sizeof(Data1.EncodedMessage) - 1);
-            Data1.EncodedMessage[sizeof(Data1.EncodedMessage) - 1] = '\0';
 
             n = write(sockfd, &Data1, sizeof(simpleData));
             if (n < 0) {
@@ -265,6 +270,15 @@ int main(int argc, char *argv[])
             }
         }
 
+        Data1.Symbol[0] = '\0';
+        strncpy(Data1.EncodedMessage, lines[i].encoded.c_str(), sizeof(Data1.EncodedMessage) - 1);
+        Data1.EncodedMessage[sizeof(Data1.EncodedMessage) - 1] = '\0';
+
+        n=write(sockfd, &Data1, sizeof(simpleData));
+        if( n<0 ) {
+            std::cerr << "ERROR writing encoded message to socket" << std::endl;
+            exit(1);
+        }
         
     }
 
